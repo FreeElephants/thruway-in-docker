@@ -1,0 +1,19 @@
+{
+    "name": "free-elephants/thruway-in-docker",
+    "type": "project",
+    "require": {
+        "voryx/thruway": "0.4.2",
+        "firebase/php-jwt": "^5.0"
+    },
+    "authors": [
+        {
+            "name": "samizdam",
+            "email": "samizdam@inbox.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "FreeElephants\\Thruway\\": "src/FreeElephants/Thruway/"
+        }
+    }
+}

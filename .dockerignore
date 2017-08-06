@@ -1,0 +1,7 @@
+composer.*
+*.md
+.gitignore
+/.git/
+/.idea/
+/tools/
+/var/
