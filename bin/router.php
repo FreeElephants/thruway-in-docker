@@ -5,11 +5,13 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use FreeElephants\DI\InjectorBuilder;
+use FreeElephants\Thruway\Jwt\AbstractJwtDecoderFactory;
 use FreeElephants\Thruway\Jwt\FirebaseJwtDecoderAdapter;
 use FreeElephants\Thruway\JwtAuthenticationProvider;
 use Thruway\Authentication\AuthenticationManager;
 use Thruway\Authentication\AuthorizationManager;
-use Thruway\Peer\Router;
+use Thruway\Peer\RouterInterface;
 use Thruway\Realm;
 use Thruway\Transport\RatchetTransportProvider;
 
@@ -18,7 +20,19 @@ define('JWT_ALGO', (string)getenv('JWT_ALGO'));
 define('REALM', (string)getenv('REALM'));
 define('ALLOW_REALM_AUTOCREATE', (bool)getenv('REALM'));
 
-$router = new Router();
+const CONFIG_PATH = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config';
+$components = require CONFIG_PATH . DIRECTORY_SEPARATOR . 'components.php';
+
+const EXT_CONFIG_FILE = CONFIG_PATH . DIRECTORY_SEPARATOR . 'components-ext.php';
+
+if (file_exists(EXT_CONFIG_FILE)) {
+    $extComponents = require EXT_CONFIG_FILE;
+    $components = array_merge_recursive($components, $extComponents);
+}
+
+$di = (new InjectorBuilder())->buildFromArray($components);
+
+$router = $di->getService(RouterInterface::class);
 
 $router->registerModule(new AuthenticationManager());
 
@@ -30,7 +44,10 @@ $authorizationManager->flushAuthorizationRules(false);
 $authorizationManager->setReady(true);
 
 $allowedAlgorithms = explode(',', JWT_ALGO);
-$jwtDecoder = new FirebaseJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
+/**@var  $jwtDecoderFactory AbstractJwtDecoderFactory */
+$jwtDecoderFactory = $di->getService(AbstractJwtDecoderFactory::class);
+$jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
+
 $jwtAuthenticationProvider = new JwtAuthenticationProvider([REALM], $jwtDecoder);
 $router->addInternalClient($jwtAuthenticationProvider);
 $router->getRealmManager()->addRealm($realm);

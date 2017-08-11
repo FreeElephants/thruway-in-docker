@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "01558338bfa2c7e88dcd30b8dcee723b",
+    "content-hash": "61254d4420b7735b6336224ecf7c98fb",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -147,6 +147,45 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2017-06-27T22:17:23+00:00"
+        },
+        {
+            "name": "free-elephants/di",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FreeElephants/php-di.git",
+                "reference": "8d32808c506b4694fa796081cbd5c3e880c825a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FreeElephants/php-di/zipball/8d32808c506b4694fa796081cbd5c3e880c825a3",
+                "reference": "8d32808c506b4694fa796081cbd5c3e880c825a3",
+                "shasum": ""
+            },
+            "require": {
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FreeElephants\\DI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2"
+            ],
+            "authors": [
+                {
+                    "name": "samizdam",
+                    "email": "samizdam@inbox.ru"
+                }
+            ],
+            "description": "IoC, constructor dependency injection",
+            "time": "2017-08-01T12:27:20+00:00"
         },
         {
             "name": "guzzle/guzzle",

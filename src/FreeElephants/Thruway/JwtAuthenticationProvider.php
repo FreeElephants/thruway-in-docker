@@ -39,8 +39,8 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
                     'authroles' => $jwt->authroles
                 ]
             ];
-        } else {
-            return ['FAILURE'];
         }
+
+        return ['FAILURE'];
     }
 }
