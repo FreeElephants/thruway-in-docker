@@ -2,6 +2,8 @@
 
 namespace FreeElephants\Thruway;
 
+use FreeElephants\Thruway\Exception\InvalidArgumentException;
+use FreeElephants\Thruway\Jwt\JwtDecoderAdapterInterface;
 use Thruway\Authentication\AbstractAuthProviderClient;
 
 /**
@@ -10,12 +12,15 @@ use Thruway\Authentication\AbstractAuthProviderClient;
  */
 class JwtAuthenticationProvider extends AbstractAuthProviderClient
 {
-    private $jwtKey;
+    /**
+     * @var JwtDecoderAdapterInterface
+     */
+    private $jwtDecoderAdapter;
 
-    public function __construct(array $authRealms, $jwtKey)
+    public function __construct(array $authRealms, JwtDecoderAdapterInterface $jwtDecoderAdapter)
     {
-        $this->jwtKey = $jwtKey;
         parent::__construct($authRealms);
+        $this->jwtDecoderAdapter = $jwtDecoderAdapter;
     }
 
     public function getMethodName()
@@ -25,7 +30,7 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
 
     public function processAuthenticate($signature, $extra = null)
     {
-        $jwt = \Firebase\JWT\JWT::decode($signature, $this->jwtKey, ['JWT_ALGO']);
+        $jwt = $this->jwtDecoderAdapter->decode($signature);
         if (isset($jwt->authid, $jwt->authroles) && is_array($jwt->authroles)) {
             return [
                 'SUCCESS',
