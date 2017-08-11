@@ -3,6 +3,9 @@ sudo: required
 services:
   - docker
 
+env:
+  - VERSION=0.1.0
+
 language: php
 
 php:
@@ -19,14 +22,15 @@ install:
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
   - composer install --no-dev --prefer-dist
-  - docker build . -t freeelphants/thruway:0.1.0
+  - docker build . -t freeelphants/thruway:$VERSION
 
 after_success:
 #   Coverage reporting
   - bash <(curl -s https://codecov.io/bash)
+# update image in docker hub
   - if [ -z "$TRAVIS_TAG" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push USER/REPO;
+    docker push freeelphants/thruway:"$VERSION";
     fi
 
 
