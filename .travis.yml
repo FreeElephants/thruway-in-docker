@@ -24,7 +24,7 @@ after_success:
 #   Coverage reporting
   - bash <(curl -s https://codecov.io/bash)
 # update image in docker hub
-  - if [ -z "$TRAVIS_TAG" ]; then
+  - if [[ "$TRAVIS_TAG" ]]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push freeelphants/thruway:"$VERSION";
     fi
