@@ -7,7 +7,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use FreeElephants\DI\InjectorBuilder;
 use FreeElephants\Thruway\Jwt\AbstractJwtDecoderFactory;
-use FreeElephants\Thruway\Jwt\FirebaseJwtDecoderAdapter;
+use FreeElephants\Thruway\Jwt\JwtValidatorInterface;
 use FreeElephants\Thruway\JwtAuthenticationProvider;
 use Thruway\Authentication\AuthenticationManager;
 use Thruway\Authentication\AuthorizationManager;
@@ -47,9 +47,10 @@ $allowedAlgorithms = explode(',', JWT_ALGO);
 /**@var  $jwtDecoderFactory AbstractJwtDecoderFactory */
 $jwtDecoderFactory = $di->getService(AbstractJwtDecoderFactory::class);
 $jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
-
-$jwtAuthenticationProvider = new JwtAuthenticationProvider([REALM], $jwtDecoder);
+$jwtValidator = $di->getService(JwtValidatorInterface::class);
+$jwtAuthenticationProvider = new JwtAuthenticationProvider([REALM], $jwtDecoder, $jwtValidator);
 $router->addInternalClient($jwtAuthenticationProvider);
+
 $router->getRealmManager()->addRealm($realm);
 
 $authRealm = new Realm('thruway.auth');

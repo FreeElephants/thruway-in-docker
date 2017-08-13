@@ -2,8 +2,9 @@
 
 namespace FreeElephants\Thruway;
 
-use FreeElephants\Thruway\Exception\InvalidArgumentException;
 use FreeElephants\Thruway\Jwt\JwtDecoderAdapterInterface;
+use FreeElephants\Thruway\Jwt\JwtValidatorInterface;
+use FreeElephants\Thruway\Validator\ListCheckerInterface;
 use Thruway\Authentication\AbstractAuthProviderClient;
 
 /**
@@ -16,11 +17,19 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
      * @var JwtDecoderAdapterInterface
      */
     private $jwtDecoderAdapter;
+    /**
+     * @var JwtValidatorInterface
+     */
+    private $validator;
 
-    public function __construct(array $authRealms, JwtDecoderAdapterInterface $jwtDecoderAdapter)
-    {
+    public function __construct(
+        array $authRealms,
+        JwtDecoderAdapterInterface $jwtDecoderAdapter,
+        JwtValidatorInterface $validator
+    ) {
         parent::__construct($authRealms);
         $this->jwtDecoderAdapter = $jwtDecoderAdapter;
+        $this->validator = $validator;
     }
 
     public function getMethodName()
@@ -30,15 +39,17 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
 
     public function processAuthenticate($signature, $extra = null)
     {
-        $jwt = $this->jwtDecoderAdapter->decode($signature);
-        if (isset($jwt->authid, $jwt->authroles) && is_array($jwt->authroles)) {
-            return [
-                'SUCCESS',
-                [
-                    'authid' => $jwt->authid,
-                    'authroles' => $jwt->authroles
-                ]
-            ];
+        if ($this->validator->isValid($signature)) {
+            $jwt = $this->jwtDecoderAdapter->decode($signature);
+            if (isset($jwt->authid, $jwt->authroles) && is_array($jwt->authroles)) {
+                return [
+                    'SUCCESS',
+                    [
+                        'authid' => $jwt->authid,
+                        'authroles' => $jwt->authroles
+                    ]
+                ];
+            }
         }
 
         return ['FAILURE'];
