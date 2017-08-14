@@ -1,6 +1,6 @@
 <?php
 
-namespace FreeElephants\Thruway\WhitelistChecker;
+namespace FreeElephants\Thruway\Validator;
 
 /**
  * @author samizdam <samizdam@inbox.ru>
