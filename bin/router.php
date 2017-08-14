@@ -11,6 +11,7 @@ use FreeElephants\Thruway\Jwt\JwtValidatorInterface;
 use FreeElephants\Thruway\JwtAuthenticationProvider;
 use Thruway\Authentication\AuthenticationManager;
 use Thruway\Authentication\AuthorizationManager;
+use Thruway\Peer\Router;
 use Thruway\Peer\RouterInterface;
 use Thruway\Realm;
 use Thruway\Transport\RatchetTransportProvider;
@@ -23,20 +24,20 @@ define('ALLOW_REALM_AUTOCREATE', (bool)getenv('REALM') ?: false);
 define('REDIS_HOST', (string)getenv('REDIS_HOST') ?: 'redis');
 define('REDIS_PORT', (int)getenv('REDIS_PORT') ?: 6379);
 define('REDIS_DBINDEX', (int)getenv('REDIS_DBINDEX') ?: 1);
-
+define('REDIS_HASH_NAME', (string)getenv('REDIS_HASH_NAME'));
 
 const CONFIG_PATH = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config';
 $components = require CONFIG_PATH . DIRECTORY_SEPARATOR . 'components.php';
 
-const EXT_CONFIG_FILE = CONFIG_PATH . DIRECTORY_SEPARATOR . 'components-ext.php';
-
-if (file_exists(EXT_CONFIG_FILE)) {
-    $extComponents = require EXT_CONFIG_FILE;
-    $components = array_merge_recursive($components, $extComponents);
-}
-
 $di = (new InjectorBuilder())->buildFromArray($components);
 
+const EXT_CONFIG_FILE = CONFIG_PATH . DIRECTORY_SEPARATOR . 'components-ext.php';
+if (file_exists(EXT_CONFIG_FILE)) {
+    $extComponents = require EXT_CONFIG_FILE;
+    $di->merge($extComponents);
+}
+
+/**@var $router Router */
 $router = $di->getService(RouterInterface::class);
 
 $router->registerModule(new AuthenticationManager());
@@ -65,5 +66,7 @@ $router->getRealmManager()->setAllowRealmAutocreate(ALLOW_REALM_AUTOCREATE);
 
 
 $transportProvider = new RatchetTransportProvider('0.0.0.0', 9000);
+
 $router->addTransportProvider($transportProvider);
+
 $router->start();

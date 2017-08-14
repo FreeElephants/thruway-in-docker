@@ -19,7 +19,7 @@ class Md5HashKeyListChecker implements ListCheckerInterface
      */
     private $hashName;
 
-    public function __construct(\Redis $redis, string $hashName)
+    public function __construct(\Redis $redis, $hashName = REDIS_HASH_NAME)
     {
         $this->redis = $redis;
         $this->hashName = $hashName;

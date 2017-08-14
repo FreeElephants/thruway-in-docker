@@ -42,6 +42,7 @@ sevices:
 - `REDIS_HOST` -- host name for connection to Redis, optional, default `redis`. Need if you use Redis, see validation section bellow. 
 - `REDIS_PORT`-- port number for connection to Redis, default `6379`. 
 - `REDIS_DBINDEX` -- number of Redis db for select it, default `1`.  
+- `REDIS_HASH_NAME` -- name of hash in Redis.  
 
 ### Components
 
@@ -49,15 +50,15 @@ For customize JWT logic you can mount `config/components-ext.php` file to contai
  
 See [php-di](https://github.com/FreeElephants/php-di) for more information. 
 
-## Use with Redis key-value Storage as Backend for JWT Validation
+## Use with Redis key-value Storage as Backend for JWT Validation on Process Authenticate
   
 Every time, on process authenticate, `JwtAuthenticationProvider` call injected `JwtValidator` instance. `JwtValidatorInterface` has one public method, for check that JWT signature is valid. 
-For revoke JWT You can use black or white lists with hash JWT sums in system.  
+For revoke JWT You can use black or white lists with hash JWT sums in system. 
 
 Out of the box this image provide next Validators:
-- `FreeElephants\Thruway\Validator\Redis\TrueDummyValidator` used by default. Already return true. 
+- `FreeElephants\Thruway\Validator\TrueDummyValidator` used by default. Already return true. 
 - `FreeElephants\Thruway\Validator\WhitelistValidator`
-- `FreeElephants\Thruway\Validator\Redis\BlacklistValidator`
+- `FreeElephants\Thruway\Validator\BlacklistValidator`
 
 `WhitelistValidator` and `BlacklistValidator` require `ListCheckerInterface` instance. You can use `FreeElephants\Thruway\Validator\Redis\Md5HashKeyListChecker` or `FreeElephants\Thruway\Validator\Redis\Md5KeyListChecker`. 
 
@@ -100,7 +101,8 @@ services:
     wamp-router:
       image: freeelephants/thruway:1.0.0 
       volumes:
-        - ./var/log/:/var/log/wamp
+        - ./var/log/wamp:/var/log
+        - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
       environment:
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
         - JWT_ALGO=HS256
@@ -121,6 +123,9 @@ services:
 
 ```
 
+
+## Use with Redis key-value Storage as Backend for JWT Validation for Periodic Disconnect Clients by Black List
+...TBD...
 
 ## Contributing
 
