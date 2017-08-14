@@ -16,9 +16,14 @@ use Thruway\Realm;
 use Thruway\Transport\RatchetTransportProvider;
 
 define('JWT_SECRET_KEY', (string)getenv('JWT_SECRET_KEY'));
-define('JWT_ALGO', (string)getenv('JWT_ALGO'));
+define('JWT_ALGOS', (string)getenv('JWT_ALGOS') ?: 'HS256');
 define('REALM', (string)getenv('REALM'));
-define('ALLOW_REALM_AUTOCREATE', (bool)getenv('REALM'));
+define('ALLOW_REALM_AUTOCREATE', (bool)getenv('REALM') ?: false);
+
+define('REDIS_HOST', (string)getenv('REDIS_HOST') ?: 'redis');
+define('REDIS_PORT', (int)getenv('REDIS_PORT') ?: 6379);
+define('REDIS_DBINDEX', (int)getenv('REDIS_DBINDEX') ?: 1);
+
 
 const CONFIG_PATH = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config';
 $components = require CONFIG_PATH . DIRECTORY_SEPARATOR . 'components.php';
@@ -43,7 +48,7 @@ $router->registerModule($authorizationManager);
 $authorizationManager->flushAuthorizationRules(false);
 $authorizationManager->setReady(true);
 
-$allowedAlgorithms = explode(',', JWT_ALGO);
+$allowedAlgorithms = explode(',', JWT_ALGOS);
 /**@var  $jwtDecoderFactory AbstractJwtDecoderFactory */
 $jwtDecoderFactory = $di->getService(AbstractJwtDecoderFactory::class);
 $jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
