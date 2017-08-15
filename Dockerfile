@@ -1,7 +1,8 @@
 #
 FROM php:7.1.8-cli
 
-RUN apt-get update \
+RUN mkdir /var/log/thruway/ \
+    && apt-get update \
     && apt-get install -y supervisor \
     && pecl install \
         redis \

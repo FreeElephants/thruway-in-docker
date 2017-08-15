@@ -9,7 +9,7 @@ docker run -d --name wamp-router \
     -e JWT_ALGO=HS256 \
     -e REALM=my_realm \
     -e ALLOW_REALM_AUTOCREATE=0 \
-    -v $(pwd)/var/log/:/var/log/ \
+    -v $(pwd)/var/log/wamp:/var/log/thruway \
     -p 8080:9000 \
     freeelephants/thruway:1.0.0
 ```
@@ -22,7 +22,7 @@ sevices:
     wamp-router:
       image: freeelephants/thruway:1.0.0 
       volumes:
-        - ./var/log/:/var/log/wamp
+        - ./var/log/wamp:/var/log/thruway
       environment:
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
         - JWT_ALGOS=HS256
@@ -38,11 +38,11 @@ sevices:
 - `JWT_SECRET_KEY` -- key for decode JWT, required.
 - `JWT_ALGOS` -- comma separated list of allowed algorithms, default value `HS256`.
 - `REALM` -- name of realm, required. 
-- `ALLOW_REALM_AUTOCREATE` -- allow clients to create realms on router, default false (0). 
+- `ALLOW_REALM_AUTOCREATE` -- allow clients to create realms on router, default false (0).
+- `THRUWAY_DEBUG_ENABLE` -- enable stdOut logging, default false (0).
 - `REDIS_HOST` -- host name for connection to Redis, optional, default `redis`. Need if you use Redis, see validation section bellow. 
 - `REDIS_PORT`-- port number for connection to Redis, default `6379`. 
 - `REDIS_DBINDEX` -- number of Redis db for select it, default `1`.  
-- `REDIS_HASH_NAME` -- name of hash in Redis.  
 
 ### Components
 
@@ -60,35 +60,37 @@ Out of the box this image provide next Validators:
 - `FreeElephants\Thruway\Validator\WhitelistValidator`
 - `FreeElephants\Thruway\Validator\BlacklistValidator`
 
-`WhitelistValidator` and `BlacklistValidator` require `ListCheckerInterface` instance. You can use `FreeElephants\Thruway\Validator\Redis\Md5HashKeyListChecker` or `FreeElephants\Thruway\Validator\Redis\Md5KeyListChecker`. 
+`WhitelistValidator` and `BlacklistValidator` require `KeyValueStorageInterface` instance. See examples below.   
 
-### Example
+### Examples
 
-_Case: You want revoke JWT by black list._ 
-
+#### Case 1: Use with Redis key-value Storage as Backend for Periodic Disconnect Clients by Black List
+ 
 1. In some control panel you put it key-value storage: 
 ```php
 <?php 
 # Some AdminJwtController::revokeJWT()
+# Value of `$user->getAuthId()` used in JWT field `authid'.
 /**@var $redis \Redis*/
-$redis->hSet('revoked_jwt', md5($jwtString), time());
-``` 
+$redis->hSet('banned_in_wamp_auth_ids', $user->getAuthId(), time());
+```
 
-2. Configure router services:
+2. Configure router components: 
 ```php
 <?php
 # config/components-ext.php
 $redis = new \Redis();
 $redis->pconnect(REDIS_HOST, REDIS_PORT);
 $redis->select(REDIS_DBINDEX);
-
+$bannedInWampAuthStorage = new \FreeElephants\Thruway\KeyValueStorage\Redis\HashKeyStorageRedisAdapter($redis, 'banned_in_wamp_auth_ids');
 return [
     'register' => [
-        \FreeElephants\Thruway\Validator\ListCheckerInterface::class => \FreeElephants\Thruway\Validator\Redis\Md5HashKeyListChecker::class,
-        \FreeElephants\Thruway\Jwt\JwtValidatorInterface::class => \FreeElephants\Thruway\Validator\BlacklistValidator::class
     ],
     'instances' => [
         \Redis::class => $redis,
+        \FreeElephants\Thruway\Timer\TimersList::class => new \FreeElephants\Thruway\Timer\TimersList([
+            [10, new \FreeElephants\Thruway\Timer\AbortSessionsFromBlacklistTimer($bannedInWampAuthStorage)]
+        ]),
     ],
 ];
 ```
@@ -101,7 +103,7 @@ services:
     wamp-router:
       image: freeelephants/thruway:1.0.0 
       volumes:
-        - ./var/log/wamp:/var/log
+        - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
       environment:
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
@@ -123,9 +125,64 @@ services:
 
 ```
 
+#### Case 2: Verify JWT by Black List on Open Connection 
 
-## Use with Redis key-value Storage as Backend for JWT Validation for Periodic Disconnect Clients by Black List
-...TBD...
+1. In some control panel you put it key-value storage: 
+```php
+<?php 
+# Some AdminJwtController::revokeJwtAction()
+/**@var $redis \Redis*/
+$redis->hSet('banned_in_wamp_auth_ids', $authId, time());
+``` 
+
+2. Configure router components:
+```php
+<?php
+# config/components-ext.php
+$redis = new \Redis();
+$redis->pconnect(REDIS_HOST, REDIS_PORT);
+$redis->select(REDIS_DBINDEX);
+
+return [
+    'register' => [
+        \FreeElephants\Thruway\Jwt\JwtValidatorInterface::class => \FreeElephants\Thruway\Validator\BlacklistValidator::class
+    ],
+    'instances' => [
+        \Redis::class => $redis,
+        \FreeElephants\Thruway\KeyValueStorage\KeyValueStorageInterface::class => new \FreeElephants\Thruway\KeyValueStorage\Redis\HashKeyStorageRedisAdapter($redis, 'banned_in_wamp_auth_ids'),
+    ],
+];
+```
+
+3. Link Route with Redis
+```yaml
+# docker-compose.yml
+
+services: 
+    wamp-router:
+      image: freeelephants/thruway:1.0.0 
+      volumes:
+        - ./var/log/wamp:/var/log/thruway
+        - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
+      environment:
+        - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
+        - JWT_ALGO=HS256
+        - REALM=my_realm
+        - ALLOW_REALM_AUTOCREATE=0
+        - REDIS_HOST=redis
+        - REDIS_PORT=6379
+        - REDIS_DBINDEX=1
+      depends_on:
+        - redis
+    
+    redis:
+      image: redis:2.8.19
+    
+    backend:
+      depends_on:
+        - redis    
+
+```
 
 ## Contributing
 
