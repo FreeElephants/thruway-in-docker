@@ -18,7 +18,7 @@ install:
 script:
   - vendor/bin/phpunit --coverage-clover=coverage.xml
   - composer install --no-dev --prefer-dist
-  - docker build . -t freeelphants/thruway:$VERSION
+  - docker build . -t freeelephants/thruway:$VERSION
 
 after_success:
 #   Coverage reporting
@@ -26,7 +26,7 @@ after_success:
 # update image in docker hub
   - if [[ "$TRAVIS_TAG" ]]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push freeelphants/thruway:"$VERSION";
+    docker push freeelephants/thruway:"$VERSION";
     fi
 
 
