@@ -5,6 +5,8 @@
 ### As Single Service
 ```bash
 docker run -d --name wamp-router \
+    -e AUTHORIZATION_ENABLE=1 \
+    -e AUTH_METHOD=jwt \
     -e JWT_SECRET_KEY=YOUR_SECRET_KEY \
     -e JWT_ALGO=HS256 \
     -e REALM=my_realm \
@@ -24,6 +26,8 @@ sevices:
       volumes:
         - ./var/log/wamp:/var/log/thruway
       environment:
+        - AUTHORIZATION_ENABLE=1
+        - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
         - JWT_ALGOS=HS256
         - REALM=my_realm
@@ -35,6 +39,8 @@ sevices:
 ## Configure and Extends
 
 ### Environment Variables
+- `AUTHORIZATION_ENABLE` -- use Authorization manager. Default false (not set). 
+- `AUTH_METHOD` -- method for authenticate, default not use (false). Supported values: `jwt`. 
 - `JWT_SECRET_KEY` -- key for decode JWT, required.
 - `JWT_ALGOS` -- comma separated list of allowed algorithms, default value `HS256`.
 - `REALM` -- name of realm, required. 
@@ -106,6 +112,8 @@ services:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
       environment:
+        - AUTHORIZATION_ENABLE=1
+        - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
         - JWT_ALGO=HS256
         - REALM=my_realm
@@ -165,6 +173,8 @@ services:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
       environment:
+        - AUTHORIZATION_ENABLE=1
+        - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
         - JWT_ALGO=HS256
         - REALM=my_realm

@@ -18,6 +18,8 @@ use Thruway\Peer\RouterInterface;
 use Thruway\Realm;
 use Thruway\Transport\RatchetTransportProvider;
 
+define('AUTHORIZATION_ENABLE', (bool)getenv('AUTHORIZATION_ENABLE'));
+define('AUTH_METHOD', getenv('AUTH_METHOD'));
 define('JWT_SECRET_KEY', (string)getenv('JWT_SECRET_KEY'));
 define('JWT_ALGOS', (string)getenv('JWT_ALGOS') ?: 'HS256');
 define('REALM', (string)getenv('REALM'));
@@ -49,27 +51,29 @@ $router = $di->getService(RouterInterface::class);
 $router->registerModule(new AuthenticationManager());
 
 $realm = new Realm(REALM);
-$authorizationManager = new AuthorizationManager($realm->getRealmName());
-$router->registerModule($authorizationManager);
-// don't allow anything by default
-$authorizationManager->flushAuthorizationRules(false);
-$authorizationManager->setReady(true);
+if (AUTHORIZATION_ENABLE) {
+    $authorizationManager = new AuthorizationManager($realm->getRealmName());
+    $router->registerModule($authorizationManager);
+    // don't allow anything by default
+    $authorizationManager->flushAuthorizationRules(false);
+    $authorizationManager->setReady(true);
+    $authRealm = new Realm('thruway.auth');
+    $router->getRealmManager()->addRealm($authRealm);
+}
 
-$allowedAlgorithms = explode(',', JWT_ALGOS);
-/**@var  $jwtDecoderFactory AbstractJwtDecoderFactory */
-$jwtDecoderFactory = $di->getService(AbstractJwtDecoderFactory::class);
-$jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
-$jwtValidator = $di->getService(JwtValidatorInterface::class);
-$jwtAuthenticationProvider = new JwtAuthenticationProvider([REALM], $jwtDecoder, $jwtValidator);
-$router->addInternalClient($jwtAuthenticationProvider);
+if (AUTH_METHOD === 'jwt') {
+    $allowedAlgorithms = explode(',', JWT_ALGOS);
+    /**@var  $jwtDecoderFactory AbstractJwtDecoderFactory */
+    $jwtDecoderFactory = $di->getService(AbstractJwtDecoderFactory::class);
+    $jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
+    $jwtValidator = $di->getService(JwtValidatorInterface::class);
+    $jwtAuthenticationProvider = new JwtAuthenticationProvider([REALM], $jwtDecoder, $jwtValidator);
+    $router->addInternalClient($jwtAuthenticationProvider);
+}
 
 $router->getRealmManager()->addRealm($realm);
 
-$authRealm = new Realm('thruway.auth');
-$router->getRealmManager()->addRealm($authRealm);
-
 $router->getRealmManager()->setAllowRealmAutocreate(ALLOW_REALM_AUTOCREATE);
-
 
 $transportProvider = new RatchetTransportProvider('0.0.0.0', 9000);
 
