@@ -13,7 +13,7 @@ docker run -d --name wamp-router \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
     -p 8080:9000 \
-    freeelephants/thruway:1.0.0
+    freeelephants/thruway:0.1.0
 ```
 
 ### With Docker Compose
@@ -22,7 +22,7 @@ docker run -d --name wamp-router \
 # docker-compose.yml
 sevices:
     wamp-router:
-      image: freeelephants/thruway:1.0.0 
+      image: freeelephants/thruway:0.1.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
       environment:
@@ -107,7 +107,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:1.0.0 
+      image: freeelephants/thruway:0.1.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -168,7 +168,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:1.0.0 
+      image: freeelephants/thruway:0.1.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -210,5 +210,5 @@ vendor/bin/phpunit
 ### Build
 ```bash
 ./tools/composer.sh install --no-dev --prefer-dist --ignore-platform-reqs
-docker build . -t freeelephants/thruway:1.0.0 
+docker build . -t freeelephants/thruway:0.1.0 
 ```
