@@ -8,7 +8,7 @@ docker run -d --name wamp-router \
     -e AUTHORIZATION_ENABLE=1 \
     -e AUTH_METHOD=jwt \
     -e JWT_SECRET_KEY=YOUR_SECRET_KEY \
-    -e JWT_ALGO=HS256 \
+    -e JWT_ALGOS=HS256 \
     -e REALM=my_realm \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
@@ -115,7 +115,7 @@ services:
         - AUTHORIZATION_ENABLE=1
         - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
-        - JWT_ALGO=HS256
+        - JWT_ALGOS=HS256
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
         - REDIS_HOST=redis
@@ -176,7 +176,7 @@ services:
         - AUTHORIZATION_ENABLE=1
         - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
-        - JWT_ALGO=HS256
+        - JWT_ALGOS=HS256
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
         - REDIS_HOST=redis

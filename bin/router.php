@@ -21,7 +21,7 @@ use Thruway\Transport\RatchetTransportProvider;
 define('AUTHORIZATION_ENABLE', (bool)getenv('AUTHORIZATION_ENABLE'));
 define('AUTH_METHOD', getenv('AUTH_METHOD'));
 define('JWT_SECRET_KEY', (string)getenv('JWT_SECRET_KEY'));
-define('JWT_ALGOS', (string)getenv('JWT_ALGOS') ?: 'HS256');
+define('JWT_ALGOS', explode(',', (string)getenv('JWT_ALGOS')) ?: ['HS256']);
 define('REALM', (string)getenv('REALM'));
 define('ALLOW_REALM_AUTOCREATE', (bool)getenv('REALM') ?: false);
 define('THRUWAY_DEBUG_ENABLE', (bool)getenv('THRUWAY_DEBUG_ENABLE') ?: false);
@@ -62,10 +62,9 @@ if (AUTHORIZATION_ENABLE) {
 }
 
 if (AUTH_METHOD === 'jwt') {
-    $allowedAlgorithms = explode(',', JWT_ALGOS);
     /**@var  $jwtDecoderFactory AbstractJwtDecoderFactory */
     $jwtDecoderFactory = $di->getService(AbstractJwtDecoderFactory::class);
-    $jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, $allowedAlgorithms);
+    $jwtDecoder = $jwtDecoderFactory->createJwtDecoderAdapter(JWT_SECRET_KEY, JWT_ALGOS);
     $jwtValidator = $di->getService(JwtValidatorInterface::class);
     $jwtAuthenticationProvider = new JwtAuthenticationProvider([REALM], $jwtDecoder, $jwtValidator);
     $router->addInternalClient($jwtAuthenticationProvider);
