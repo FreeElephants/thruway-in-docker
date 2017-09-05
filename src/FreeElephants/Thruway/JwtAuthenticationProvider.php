@@ -2,6 +2,9 @@
 
 namespace FreeElephants\Thruway;
 
+use FreeElephants\Thruway\Jwt\JwtDecoderAdapterInterface;
+use FreeElephants\Thruway\Jwt\JwtValidatorInterface;
+use FreeElephants\Thruway\KeyValueStorage\KeyValueStorageInterface;
 use Thruway\Authentication\AbstractAuthProviderClient;
 
 /**
@@ -10,12 +13,23 @@ use Thruway\Authentication\AbstractAuthProviderClient;
  */
 class JwtAuthenticationProvider extends AbstractAuthProviderClient
 {
-    private $jwtKey;
+    /**
+     * @var JwtDecoderAdapterInterface
+     */
+    private $jwtDecoderAdapter;
+    /**
+     * @var JwtValidatorInterface
+     */
+    private $validator;
 
-    public function __construct(array $authRealms, $jwtKey)
-    {
-        $this->jwtKey = $jwtKey;
+    public function __construct(
+        array $authRealms,
+        JwtDecoderAdapterInterface $jwtDecoderAdapter,
+        JwtValidatorInterface $validator
+    ) {
         parent::__construct($authRealms);
+        $this->jwtDecoderAdapter = $jwtDecoderAdapter;
+        $this->validator = $validator;
     }
 
     public function getMethodName()
@@ -25,17 +39,17 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
 
     public function processAuthenticate($signature, $extra = null)
     {
-        $jwt = \Firebase\JWT\JWT::decode($signature, $this->jwtKey, ['JWT_ALGO']);
-        if (isset($jwt->authid, $jwt->authroles) && is_array($jwt->authroles)) {
-            return [
-                'SUCCESS',
-                [
-                    'authid' => $jwt->authid,
-                    'authroles' => $jwt->authroles
-                ]
-            ];
-        } else {
-            return ['FAILURE'];
-        }
+            if ($this->validator->isValid($signature)) {
+                $jwt = $this->jwtDecoderAdapter->decode($signature);
+                return [
+                    'SUCCESS',
+                    [
+                        'authid' => $jwt->authid,
+                        'authroles' => $jwt->authroles
+                    ]
+                ];
+            }
+
+        return ['FAILURE'];
     }
 }

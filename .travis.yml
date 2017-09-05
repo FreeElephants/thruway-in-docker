@@ -1,0 +1,35 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  - VERSION=0.2.0
+
+language: php
+
+php:
+  - 7.1
+
+install:
+  - composer self-update
+  - composer install
+
+script:
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
+  - composer install --no-dev --prefer-dist
+  - docker build . -t freeelephants/thruway:$VERSION
+
+after_success:
+#   Coverage reporting
+  - bash <(curl -s https://codecov.io/bash)
+# update image in docker hub
+  - if [[ "$TRAVIS_TAG" ]]; then
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push freeelephants/thruway:"$VERSION";
+    fi
+
+
+cache:
+  directories:
+    - $HOME/.composer/cache

@@ -1,3 +1,5 @@
 /.idea/
-/vendor/
 /var/
+/vendor/
+
+phpunit.xml

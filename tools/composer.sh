@@ -6,4 +6,4 @@ docker run --rm --interactive --tty \
     --volume /etc/group:/etc/group:ro \
     --volume $PWD:/app \
     --volume $HOME/.composer:/composer \
-    composer $@ --ignore-platform-reqs
+    composer $@

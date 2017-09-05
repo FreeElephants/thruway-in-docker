@@ -3,5 +3,6 @@ composer.*
 .gitignore
 /.git/
 /.idea/
+/tests/
 /tools/
 /var/
