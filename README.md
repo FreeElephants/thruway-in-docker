@@ -13,7 +13,7 @@ docker run -d --name wamp-router \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
     -p 8080:9000 \
-    freeelephants/thruway:0.2.0
+    freeelephants/thruway:0.3.0
 ```
 
 ### With Docker Compose
@@ -22,7 +22,7 @@ docker run -d --name wamp-router \
 # docker-compose.yml
 sevices:
     wamp-router:
-      image: freeelephants/thruway:0.2.0 
+      image: freeelephants/thruway:0.3.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
       environment:
@@ -107,7 +107,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.2.0 
+      image: freeelephants/thruway:0.3.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -168,7 +168,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.2.0 
+      image: freeelephants/thruway:0.3.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -194,6 +194,18 @@ services:
 
 ```
 
+## FAQ:
+
+Q: On connect client in my container with PawlTransportProvider I get error `Could not connect: DNS Request did not return valid answer.`.
+A: You need resolve router container name to IP: 
+```php
+$url = sprintf('ws://%s:9000/', gethostbyname('wamp-router')); // your router container name
+$client->addTransportProvider(new \Thruway\Transport\PawlTransportProvider($url);
+```
+
+Q: On connect client I get error `[Thruway\Transport\PawlTransportProvider 18] Received: [3,{},"wamp.error.not_authorized"]`
+A: You need specify auth roles. See examples https://github.com/voryx/Thruway/issues/93 
+
 ## Contributing
 
 ### Installation
@@ -210,5 +222,5 @@ vendor/bin/phpunit
 ### Build
 ```bash
 ./tools/composer.sh install --no-dev --prefer-dist --ignore-platform-reqs
-docker build . -t freeelephants/thruway:0.2.0 
+docker build . -t freeelephants/thruway:0.3.0 
 ```

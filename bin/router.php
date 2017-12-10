@@ -78,16 +78,18 @@ $transportProvider = new RatchetTransportProvider('0.0.0.0', 9000);
 
 $router->addTransportProvider($transportProvider);
 
-/**@var $timersList TimersList */
-$timersList = $di->getService(TimersList::class);
-$timersSplObjectStorage = $timersList->getTimers();
-/**@var $timer Timer */
-foreach ($timersSplObjectStorage as $timer) {
-    $interval = $timersSplObjectStorage->offsetGet($timer);
-    $realm = $router->getRealmManager()->getRealm(\REALM);
-    $router->getLoop()->addPeriodicTimer($interval, function () use ($realm, $timer) {
-        $timer->execute($realm);
-    });
+if ($di->hasImplementation(TimersList::class)) {
+    /**@var $timersList TimersList */
+    $timersList = $di->getService(TimersList::class);
+    $timersSplObjectStorage = $timersList->getTimers();
+    /**@var $timer Timer */
+    foreach ($timersSplObjectStorage as $timer) {
+        $interval = $timersSplObjectStorage->offsetGet($timer);
+        $realm = $router->getRealmManager()->getRealm(\REALM);
+        $router->getLoop()->addPeriodicTimer($interval, function () use ($realm, $timer) {
+            $timer->execute($realm);
+        });
+    }
 }
 
 $router->start();

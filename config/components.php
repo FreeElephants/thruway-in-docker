@@ -18,6 +18,5 @@ return [
         RouterInterface::class => Router::class,
         AbstractJwtDecoderFactory::class => FirebaseJwtDecoderFactory::class,
         JwtValidatorInterface::class => TrueDummyValidator::class,
-        TimersList::class => TimersList::class,
     ],
 ];
