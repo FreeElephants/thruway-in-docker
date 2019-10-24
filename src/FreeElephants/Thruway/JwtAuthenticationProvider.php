@@ -43,10 +43,7 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
                 $jwt = $this->jwtDecoderAdapter->decode($signature);
                 return [
                     'SUCCESS',
-                    [
-                        'authid' => $jwt->authid,
-                        'authroles' => $jwt->authroles
-                    ]
+                    (array)$jwt,
                 ];
             }
 
