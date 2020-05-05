@@ -1,5 +1,5 @@
 #
-FROM php:7.1.8-cli
+FROM php:7.4-cli
 
 RUN mkdir /var/log/thruway/ \
     && apt-get update \

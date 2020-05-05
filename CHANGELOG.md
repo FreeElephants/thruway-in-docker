@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] 2020-05-05
+### Changed
+- Build image from php:7.4-cli
+
+### Security
+- Bump symfony/http-foundation from 4.2.3 to 4.4.1
+
 ## [0.4.0] 2019-10-27
 ### Added
 - Full jwt content returned. 
