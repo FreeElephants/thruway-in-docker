@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Build image from php:7.4-cli
 
 ### Security
-- Bump symfony/http-foundation from 4.2.3 to 4.4.1
+- Bump symfony/http-foundation
 
 ## [0.4.0] 2019-10-27
 ### Added
