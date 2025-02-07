@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Project structure and development env, update some tools
 - TimersList use empty list as default argument on construction
+- Replace travis with github actions
 
 ## [0.5.0] 2020-05-05
 ### Changed
