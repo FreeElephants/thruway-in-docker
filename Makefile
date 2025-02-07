@@ -7,10 +7,10 @@ install: ## (Пере-)сборка образа приложения и уст�
 	./bin/composer install
 
 run: ## (Пере-)запуск локального экземпляра приложения
-	docker compose up -d
+	docker compose up -d --remove-orphans
 
 stop: ## Остановка приложения
-	docker compose down
+	docker compose down --remove-orphans
 
 test:
 	./bin/php vendor/bin/phpunit

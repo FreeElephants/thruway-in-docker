@@ -1,5 +1,5 @@
 services:
-  app:
+  wamp-router:
     image: ${DOCKER_DEV_IMAGE}:${REVISION}
     build:
       dockerfile: Dockerfile
@@ -13,3 +13,21 @@ services:
       - ./config/:/srv/thruway/config/
       - ./vendor/:/srv/thruway/vendor/
     command: php cli/router.php
+
+  example-sub:
+    image: ${DOCKER_DEV_IMAGE}:${REVISION}
+    env_file:
+      - .env
+    volumes:
+      - ./cli/:/srv/thruway/cli/
+      - ./vendor/:/srv/thruway/vendor/
+    command: php cli/example-sub.php
+
+  example-pub:
+    image: ${DOCKER_DEV_IMAGE}:${REVISION}
+    env_file:
+      - .env
+    volumes:
+      - ./cli/:/srv/thruway/cli/
+      - ./vendor/:/srv/thruway/vendor/
+    command: php cli/example-pub.php
