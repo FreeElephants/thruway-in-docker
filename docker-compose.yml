@@ -1,0 +1,13 @@
+services:
+  app:
+    image: ${DOCKER_DEV_IMAGE}:${REVISION}
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: dev
+    volumes:
+      - ./bin/:/srv/thruway/bin/
+      - ./src/:/srv/thruway/src/
+      - ./config/:/srv/thruway/config/
+      - ./vendor/:/srv/thruway/vendor/
+      - ./etc/:/etc/
