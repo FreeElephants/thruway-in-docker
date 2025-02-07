@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source .env
+
+docker run --rm --interactive --tty \
+    --user $UID:$UID \
+    --volume $PWD:/srv/thruway/ \
+    ${DOCKER_DEV_IMAGE}:${REVISION} php $@

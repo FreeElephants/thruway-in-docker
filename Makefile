@@ -4,9 +4,13 @@ help:
 install: ## (Пере-)сборка образа приложения и установка зависимостей.
 	cp -n dev.env .env
 	docker compose build
-	./tools/composer.sh install
+	./bin/composer install
 
 run: ## (Пере-)запуск локального экземпляра приложения
 	docker compose up -d
 
 stop: ## Остановка приложения
+	docker compose down
+
+test:
+	./bin/php vendor/bin/phpunit

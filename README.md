@@ -41,6 +41,9 @@ sevices:
 ## Configure and Extends
 
 ### Environment Variables
+
+See dev.env for actual default config. 
+
 - `AUTHORIZATION_ENABLE` -- use Authorization manager. Default false (not set). 
 - `AUTH_METHOD` -- method for authenticate, default not use (false). Supported values: `jwt`. 
 - `JWT_SECRET_KEY` -- key for decode JWT, required.
@@ -198,19 +201,13 @@ services:
 
 ## Contributing
 
-### Installation
+### Installation (with docker)
 
 ```bash
-./tools/composer.sh install 
+make install 
 ```
 
 ### Testing
 ```bash
-vendor/bin/phpunit
-```
-
-### Build
-```bash
-./tools/composer.sh install --no-dev --prefer-dist --ignore-platform-reqs
-docker build . -t freeelephants/thruway:0.1.0 
+make test
 ```

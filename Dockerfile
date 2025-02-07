@@ -1,15 +1,14 @@
 FROM php:7.4-cli AS base
 
-RUN mkdir /var/log/thruway/ \
-    && apt-get update \
-    && apt-get install -y supervisor \
-    && pecl install \
+WORKDIR /srv/thruway/
+
+RUN mkdir /var/log/thruway/
+
+RUN pecl install \
         redis \
     && docker-php-ext-enable \
         redis \
     && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /srv/thruway/
 
 FROM base AS dev
 
@@ -20,15 +19,11 @@ RUN apt-get update \
     && apt-get install -y \
     zip
 
-
 FROM base AS prod
 
-COPY ./bin/ /srv/thruway/bin/
+COPY ./cli/ /srv/thruway/cli/
 COPY ./src/ /srv/thruway/src/
 COPY ./config/ /srv/thruway/config/
 COPY ./vendor/ /srv/thruway/vendor/
-COPY ./etc/ /etc/
-
-CMD ["supervisord", "-c", "/etc/supervisor/supervisor.conf"]
 
 EXPOSE 9000
