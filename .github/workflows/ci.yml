@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php }}-composer-
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer update --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress
 
       - name: Audit composer deps
         run: composer audit
