@@ -2,7 +2,7 @@
     "name": "free-elephants/thruway-in-docker",
     "type": "project",
     "require": {
-        "voryx/thruway": "0.5.4",
+        "voryx/thruway": "0.6.1",
         "firebase/php-jwt": "6.*",
         "free-elephants/di": "^1.3"
     },
