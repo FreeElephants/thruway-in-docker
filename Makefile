@@ -18,5 +18,8 @@ stop: ## Остановка приложения
 test:
 	./bin/php vendor/bin/phpunit
 
-build: install # Prepare prod image
+build: install ## Prepare prod image
 	docker build -f Dockerfile -t ${DOCKER_IMAGE}:${REVISION} --target=prod .
+
+publish: ## Publish version to docker hub
+	docker push ${DOCKER_IMAGE}:${REVISION}
