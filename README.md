@@ -10,7 +10,7 @@ docker run -d --name wamp-router \
     -e AUTHORIZATION_ENABLE=1 \
     -e AUTH_METHOD=jwt \
     -e JWT_SECRET_KEY=YOUR_SECRET_KEY \
-    -e JWT_ALGOS=HS256 \
+    -e JWT_ALGO=HS256 \
     -e REALM=my_realm \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
@@ -31,7 +31,7 @@ sevices:
         - AUTHORIZATION_ENABLE=1
         - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
-        - JWT_ALGOS=HS256
+        - JWT_ALGO=HS256
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
       ports:
@@ -42,18 +42,7 @@ sevices:
 
 ### Environment Variables
 
-See dev.env for actual default config. 
-
-- `AUTHORIZATION_ENABLE` -- use Authorization manager. Default false (not set). 
-- `AUTH_METHOD` -- method for authenticate, default not use (false). Supported values: `jwt`. 
-- `JWT_SECRET_KEY` -- key for decode JWT, required.
-- `JWT_ALGOS` -- comma separated list of allowed algorithms, default value `HS256`.
-- `REALM` -- name of realm, required. 
-- `ALLOW_REALM_AUTOCREATE` -- allow clients to create realms on router, default false (0).
-- `THRUWAY_DEBUG_ENABLE` -- enable stdOut logging, default false (0).
-- `REDIS_HOST` -- host name for connection to Redis, optional, default `redis`. Need if you use Redis, see validation section bellow. 
-- `REDIS_PORT`-- port number for connection to Redis, default `6379`. 
-- `REDIS_DBINDEX` -- number of Redis db for select it, default `1`.  
+See dev.env for actual default config and descriptions. 
 
 ### Components
 
@@ -120,7 +109,7 @@ services:
         - AUTHORIZATION_ENABLE=1
         - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
-        - JWT_ALGOS=HS256
+        - JWT_ALGO=HS256
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
         - REDIS_HOST=redis
@@ -181,7 +170,7 @@ services:
         - AUTHORIZATION_ENABLE=1
         - AUTH_METHOD=jwt
         - JWT_SECRET_KEY=${YOUR_SECRET_KEY}
-        - JWT_ALGOS=HS256
+        - JWT_ALGO=HS256
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
         - REDIS_HOST=redis

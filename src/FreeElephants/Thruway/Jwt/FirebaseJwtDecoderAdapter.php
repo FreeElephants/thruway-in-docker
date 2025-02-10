@@ -5,45 +5,38 @@ namespace FreeElephants\Thruway\Jwt;
 
 
 use Firebase\JWT\JWT;
-use FreeElephants\Thruway\Jwt\Exception\InvalidArgumentException;
+use Firebase\JWT\Key;
 use FreeElephants\Thruway\Jwt\Exception\OutOfBoundsException;
 
 class FirebaseJwtDecoderAdapter implements JwtDecoderAdapterInterface
 {
 
-    private $algorithms;
-    /**
-     * @var string
-     */
-    private $key;
+    private string $algorithm;
+    private string $key;
 
-    public function __construct(string $key, array $algorithms)
+    public function __construct(string $key, string $algorithm)
     {
         $this->key = $key;
-        $this->setAlgorithms($algorithms);
+        $this->setAlgorithm($algorithm);
     }
 
-    public function getAlgorithms(): array
+    public function getAlgorithm(): string
     {
-        return $this->algorithms;
+        return $this->algorithm;
     }
 
-    public function setAlgorithms(array $algorithms)
+    public function setAlgorithm(string $algorithm)
     {
-        if (empty($algorithms)) {
-            throw new InvalidArgumentException('JWT algorithms list can not be empty');
+        if (!in_array($algorithm, $this->getSupportedAlgorithms())) {
+            throw new OutOfBoundsException('Algorithm out of supported in this adapter: ' . implode($this->getSupportedAlgorithms()));
         }
 
-        if ($outOfSupported = array_diff($algorithms, $this->getSupportedAlgorithms())) {
-            throw new OutOfBoundsException('Some algorithms out of supported in this adapter: ' . implode($outOfSupported));
-        }
-
-        $this->algorithms = $algorithms;
+        $this->algorithm = $algorithm;
     }
 
     public function decode(string $signature): \stdClass
     {
-        return JWT::decode($signature, $this->key, $this->algorithms);
+        return JWT::decode($signature, new Key($this->key, $this->algorithm));
     }
 
     public function getSupportedAlgorithms(): array
@@ -52,7 +45,7 @@ class FirebaseJwtDecoderAdapter implements JwtDecoderAdapterInterface
             'HS256',
             'HS384',
             'HS512',
-            'RS256'
+            'RS256',
         ];
     }
 }

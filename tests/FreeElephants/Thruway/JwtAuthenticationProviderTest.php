@@ -7,7 +7,6 @@ use FreeElephants\Thruway\Jwt\JwtDecoderAdapterInterface;
 use FreeElephants\Thruway\Jwt\JwtValidatorInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use stdClass;
 use Thruway\Logging\Logger;
 
 class JwtAuthenticationProviderTest extends TestCase

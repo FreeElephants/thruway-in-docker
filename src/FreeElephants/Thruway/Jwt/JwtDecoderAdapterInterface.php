@@ -7,9 +7,9 @@ namespace FreeElephants\Thruway\Jwt;
 interface JwtDecoderAdapterInterface
 {
 
-    public function getAlgorithms(): array;
+    public function getAlgorithm(): string;
 
-    public function setAlgorithms(array $algorithms);
+    public function setAlgorithm(string $algorithm);
 
     public function decode(string $signature): \stdClass;
 
