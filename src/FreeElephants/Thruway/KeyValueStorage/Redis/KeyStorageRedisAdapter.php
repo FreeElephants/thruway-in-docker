@@ -9,63 +9,26 @@ use FreeElephants\Thruway\KeyValueStorage\KeyValueStorageInterface;
  */
 class KeyStorageRedisAdapter implements KeyValueStorageInterface
 {
-
-    /**
-     * @var \Redis
-     */
-    private $redis;
-
-    public function __construct(\Redis $redis)
+    public function __construct(private readonly \Redis $redis)
     {
-        $this->redis = $redis;
     }
 
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return $this->redis->exists($offset);
     }
 
-    /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
-     */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->redis->get($offset);
     }
 
-    /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value):void
     {
         $this->redis->set($offset, $value);
     }
 
-    /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         $this->redis->del($offset);
     }

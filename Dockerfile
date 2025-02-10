@@ -1,4 +1,4 @@
-FROM php:8.0-cli AS base
+FROM php:8.1-cli AS base
 
 WORKDIR /srv/thruway/
 

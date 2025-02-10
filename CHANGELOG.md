@@ -6,8 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased] 
 
+## [0.7.0] 2025-02-10
+
 ### Changed
-- Use php 8.0 as base image
+- Use php 8.1 as base image, related php typings updates signature refactoring 
 - Use firebase/jwt:6, refactor related adapter package
 - JWT_ALGOS (comma separated list) replaces with JWT_ALGO (single string value)
 - Update composer dependencies

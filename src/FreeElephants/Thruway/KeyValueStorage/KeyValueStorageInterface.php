@@ -7,5 +7,5 @@ namespace FreeElephants\Thruway\KeyValueStorage;
  */
 interface KeyValueStorageInterface extends \ArrayAccess
 {
-    public function offsetExists($key);
+    public function offsetExists(mixed $key): bool;
 }
