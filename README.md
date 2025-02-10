@@ -14,8 +14,8 @@ docker run -d --name wamp-router \
     -e REALM=my_realm \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
-    -p 8080:9000 \
-    freeelephants/thruway:0.1.0
+    -p 9000:9000 \
+    freeelephants/thruway:0.6.0
 ```
 
 ### With Docker Compose
@@ -24,7 +24,7 @@ docker run -d --name wamp-router \
 # docker-compose.yml
 sevices:
     wamp-router:
-      image: freeelephants/thruway:0.1.0 
+      image: freeelephants/thruway:0.6.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
       environment:
@@ -35,12 +35,15 @@ sevices:
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
       ports:
-        - 8080:9000
+        - 9000:9000
 ```
 
 ## Configure and Extends
 
 ### Environment Variables
+
+See dev.env for actual default config. 
+
 - `AUTHORIZATION_ENABLE` -- use Authorization manager. Default false (not set). 
 - `AUTH_METHOD` -- method for authenticate, default not use (false). Supported values: `jwt`. 
 - `JWT_SECRET_KEY` -- key for decode JWT, required.
@@ -109,7 +112,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.1.0 
+      image: freeelephants/thruway:0.6.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -170,7 +173,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.1.0 
+      image: freeelephants/thruway:0.6.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -188,7 +191,7 @@ services:
         - redis
     
     redis:
-      image: redis:2.8.19
+      image: redis
     
     backend:
       depends_on:
@@ -198,19 +201,13 @@ services:
 
 ## Contributing
 
-### Installation
+### Installation (with docker)
 
 ```bash
-./tools/composer.sh install 
+make install 
 ```
 
 ### Testing
 ```bash
-vendor/bin/phpunit
-```
-
-### Build
-```bash
-./tools/composer.sh install --no-dev --prefer-dist --ignore-platform-reqs
-docker build . -t freeelephants/thruway:0.1.0 
+make test
 ```

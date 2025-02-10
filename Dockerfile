@@ -1,23 +1,31 @@
-#
-FROM php:7.4-cli
+FROM php:7.4-cli AS base
 
-RUN mkdir /var/log/thruway/ \
-    && apt-get update \
-    && apt-get install -y supervisor \
-    && pecl install \
+WORKDIR /srv/thruway/
+
+RUN mkdir /var/log/thruway/
+
+RUN pecl install \
         redis \
     && docker-php-ext-enable \
         redis \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./bin/ /srv/thruway/bin/
+FROM base AS dev
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Composer requirements
+RUN apt-get update \
+    && apt-get install -y \
+    zip
+
+FROM base AS prod
+
+COPY ./cli/ /srv/thruway/cli/
 COPY ./src/ /srv/thruway/src/
 COPY ./config/ /srv/thruway/config/
 COPY ./vendor/ /srv/thruway/vendor/
-COPY ./etc/ /etc/
-
-WORKDIR /srv/thruway/
-
-CMD ["supervisord", "-c", "/etc/supervisor/supervisor.conf"]
 
 EXPOSE 9000
+
+CMD ["php", "cli/router.php"]

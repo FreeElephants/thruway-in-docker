@@ -12,7 +12,7 @@ class TimersList
      * VisitorList constructor.
      * @param array $timersConfig like [[10, new SomeTimes()], [15, new AnotherTimer()]]
      */
-    public function __construct(array $timersConfig)
+    public function __construct(array $timersConfig = [])
     {
         $this->timers = new \SplObjectStorage();
         foreach ($timersConfig as $item) {

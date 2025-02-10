@@ -4,5 +4,4 @@ composer.*
 /.git/
 /.idea/
 /tests/
-/tools/
 /var/
