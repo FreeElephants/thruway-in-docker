@@ -56,5 +56,5 @@ jobs:
       - name: Run tests
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
-      - name: Upload coverage
-        run: bash <(curl -s https://codecov.io/bash)
+#      - name: Upload coverage
+#        run: bash <(curl -s https://codecov.io/bash)
