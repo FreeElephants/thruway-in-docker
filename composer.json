@@ -4,7 +4,7 @@
     "require": {
         "voryx/thruway": "0.6.1",
         "firebase/php-jwt": "6.*",
-        "free-elephants/di": "^1.3"
+        "free-elephants/di": "^4.0"
     },
     "authors": [
         {

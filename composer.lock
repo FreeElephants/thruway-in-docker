@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "212720d91118c17c05ee5e46b5b31478",
+    "content-hash": "4f4749ed930f3d93a68f3f5113cb1998",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -181,28 +181,28 @@
         },
         {
             "name": "free-elephants/di",
-            "version": "1.7.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FreeElephants/php-di.git",
-                "reference": "ae082077a47f51aa4204cbc4d9c5ccf5af37803d"
+                "reference": "5116342db73672d19a0677f6f287295b06ff62d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FreeElephants/php-di/zipball/ae082077a47f51aa4204cbc4d9c5ccf5af37803d",
-                "reference": "ae082077a47f51aa4204cbc4d9c5ccf5af37803d",
+                "url": "https://api.github.com/repos/FreeElephants/php-di/zipball/5116342db73672d19a0677f6f287295b06ff62d4",
+                "reference": "5116342db73672d19a0677f6f287295b06ff62d4",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
-                "psr/container": "^1.0",
-                "psr/log": "~1.0"
+                "php": "^7.4|^8.0",
+                "psr/container": "^1|^2",
+                "psr/log": "^1|^2|^3"
             },
             "provide": {
-                "psr/container-implementation": "1.0"
+                "psr/container-implementation": "^1|^2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.6"
+                "phpunit/phpunit": "^9.3"
             },
             "type": "library",
             "autoload": {
@@ -223,9 +223,9 @@
             "description": "IoC, constructor dependency injection",
             "support": {
                 "issues": "https://github.com/FreeElephants/php-di/issues",
-                "source": "https://github.com/FreeElephants/php-di/tree/master"
+                "source": "https://github.com/FreeElephants/php-di/tree/4.0.1"
             },
-            "time": "2018-07-22T09:38:27+00:00"
+            "time": "2024-10-21T10:13:38+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
