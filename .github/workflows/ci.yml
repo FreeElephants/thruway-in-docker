@@ -54,6 +54,9 @@ jobs:
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: composer update --prefer-${{ matrix.prefer }} --prefer-dist --no-progress
 
+      - name: Audit composer deps
+        run: composer audit
+
       - name: Run tests
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
