@@ -2,7 +2,9 @@
 
 https://github.com/voryx/Thruway
 
-## Run 
+## Run
+
+Actual `$REVISION` value you can find at docker hub repository (see also in dev.env in sources). 
 
 ### As Single Service
 ```bash
@@ -15,7 +17,7 @@ docker run -d --name wamp-router \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
     -p 9000:9000 \
-    freeelephants/thruway:0.6.0
+    freeelephants/thruway:${REVISION}
 ```
 
 ### With Docker Compose
@@ -24,7 +26,7 @@ docker run -d --name wamp-router \
 # docker-compose.yml
 sevices:
     wamp-router:
-      image: freeelephants/thruway:0.6.0 
+      image: freeelephants/thruway:${REVISION} 
       volumes:
         - ./var/log/wamp:/var/log/thruway
       environment:
@@ -101,7 +103,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.6.0 
+      image: freeelephants/thruway:${REVISION}
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -119,7 +121,7 @@ services:
         - redis
     
     redis:
-      image: redis:2.8.19
+      image: redis
     
     backend:
       depends_on:
@@ -162,7 +164,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.6.0 
+      image: freeelephants/thruway:${REVISION} 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
