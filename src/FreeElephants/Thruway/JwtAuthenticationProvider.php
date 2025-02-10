@@ -5,6 +5,7 @@ namespace FreeElephants\Thruway;
 use FreeElephants\Thruway\Jwt\JwtDecoderAdapterInterface;
 use FreeElephants\Thruway\Jwt\JwtValidatorInterface;
 use FreeElephants\Thruway\KeyValueStorage\KeyValueStorageInterface;
+use React\EventLoop\LoopInterface;
 use Thruway\Authentication\AbstractAuthProviderClient;
 
 /**
@@ -25,9 +26,10 @@ class JwtAuthenticationProvider extends AbstractAuthProviderClient
     public function __construct(
         array $authRealms,
         JwtDecoderAdapterInterface $jwtDecoderAdapter,
-        JwtValidatorInterface $validator
+        JwtValidatorInterface $validator,
+        LoopInterface $loop = null
     ) {
-        parent::__construct($authRealms);
+        parent::__construct($authRealms, $loop);
         $this->jwtDecoderAdapter = $jwtDecoderAdapter;
         $this->validator = $validator;
     }
