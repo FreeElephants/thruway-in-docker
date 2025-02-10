@@ -27,3 +27,5 @@ COPY ./config/ /srv/thruway/config/
 COPY ./vendor/ /srv/thruway/vendor/
 
 EXPOSE 9000
+
+CMD ["php", "cli/router.php"]

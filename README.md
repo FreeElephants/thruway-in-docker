@@ -14,8 +14,8 @@ docker run -d --name wamp-router \
     -e REALM=my_realm \
     -e ALLOW_REALM_AUTOCREATE=0 \
     -v $(pwd)/var/log/wamp:/var/log/thruway \
-    -p 8080:9000 \
-    freeelephants/thruway:0.1.0
+    -p 9000:9000 \
+    freeelephants/thruway:0.6.0
 ```
 
 ### With Docker Compose
@@ -24,7 +24,7 @@ docker run -d --name wamp-router \
 # docker-compose.yml
 sevices:
     wamp-router:
-      image: freeelephants/thruway:0.1.0 
+      image: freeelephants/thruway:0.6.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
       environment:
@@ -35,7 +35,7 @@ sevices:
         - REALM=my_realm
         - ALLOW_REALM_AUTOCREATE=0
       ports:
-        - 8080:9000
+        - 9000:9000
 ```
 
 ## Configure and Extends
@@ -112,7 +112,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.1.0 
+      image: freeelephants/thruway:0.6.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -173,7 +173,7 @@ return [
 
 services: 
     wamp-router:
-      image: freeelephants/thruway:0.1.0 
+      image: freeelephants/thruway:0.6.0 
       volumes:
         - ./var/log/wamp:/var/log/thruway
         - ./config/components-ext.php:/srv/thruway/config/componentns-ext.php
@@ -191,7 +191,7 @@ services:
         - redis
     
     redis:
-      image: redis:2.8.19
+      image: redis
     
     backend:
       depends_on:
