@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased] 
 
+## [0.6.0] 2025-02-10
+
 ### Changed
 - Project structure and development env, update some tools
 - TimersList use empty list as default argument on construction
