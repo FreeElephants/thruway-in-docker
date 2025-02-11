@@ -9,22 +9,15 @@ jobs:
       matrix:
         experimental: [false]
         php:
-          - 7.4
-#          - 8.0
-#          - 8.1
-#          - 8.2
-#          - 8.3
+          - 8.2
+          - 8.3
 #          - 8.4
 #        include:
 #          - php: 8.5
-#            prefer: stable
 #            experimental: true
-        prefer:
-          - lowest
-          - stable
       fail-fast: false
 
-    name: Test on PHP ${{ matrix.php }} with ${{ matrix.prefer }} composer prefer option
+    name: Test on PHP ${{ matrix.php }}
     runs-on: ubuntu-latest
 
     steps:
@@ -47,15 +40,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ matrix.prefer }}-
+          key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-
           restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ matrix.prefer }}-
+            ${{ runner.os }}-php-${{ matrix.php }}-composer-
       - name: Install dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
-        run: composer update --prefer-${{ matrix.prefer }} --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress
+
+      - name: Audit composer deps
+        run: composer audit
 
       - name: Run tests
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
-      - name: Upload coverage
-        run: bash <(curl -s https://codecov.io/bash)
+#      - name: Upload coverage
+#        run: bash <(curl -s https://codecov.io/bash)

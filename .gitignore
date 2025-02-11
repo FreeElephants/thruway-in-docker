@@ -1,7 +1,10 @@
 /.idea/
 /.env
 
+/dev-tools-reports/
+
 /var/
 /vendor/
 
-phpunit.xml
+/.phpunit.result.cache
+/phpunit.xml

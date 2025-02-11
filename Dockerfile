@@ -1,4 +1,4 @@
-FROM php:7.4-cli AS base
+FROM php:8.2-cli AS base
 
 WORKDIR /srv/thruway/
 
@@ -18,6 +18,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN apt-get update \
     && apt-get install -y \
     zip
+
+RUN pecl channel-update pecl.php.net \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug
+
+RUN echo "xdebug.mode=coverage,develop,debug\n" \
+    "xdebug.show_error_trace=1\n" \
+    >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 FROM base AS prod
 
