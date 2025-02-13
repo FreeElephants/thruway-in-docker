@@ -14,7 +14,10 @@
     ],
     "autoload": {
         "psr-4": {
-            "FreeElephants\\Thruway\\": "src/FreeElephants/Thruway/"
+            "FreeElephants\\Thruway\\": "src/FreeElephants/Thruway/",
+            "Ratchet\\Server\\": "src/Ratchet/Server/",
+            "React\\Socket\\": "src/React/Socket/",
+            "Thruway\\Transport\\": "src/Thruway/Transport/"
         }
     },
     "autoload-dev": {
