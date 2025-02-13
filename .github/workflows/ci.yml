@@ -11,10 +11,10 @@ jobs:
         php:
           - 8.2
           - 8.3
-#          - 8.4
-#        include:
-#          - php: 8.5
-#            experimental: true
+          - 8.4
+        include:
+          - php: 8.5
+            experimental: true
       fail-fast: false
 
     name: Test on PHP ${{ matrix.php }}

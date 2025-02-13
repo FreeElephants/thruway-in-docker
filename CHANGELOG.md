@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased] 
 
+## [0.7.1] 2025-02-13
+
+### Added
+- Last php versions to ci actions
+
+### Changed
+- Composer update
+
+### Fixed
+- Vendor code deprecations about dynamic properties on php 8.2
+
 ## [0.7.0] 2025-02-10
 
 ### Changed
